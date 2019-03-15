@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		//AOP
+		var before = function(fn, beforeFn) {
+			return function(){
+				beforeFn.apply(this, arguments);
+				return fn.apply(this, arguments);
+			}
+		}
+
+		var after = function(fn, afterFn) {
+			return function() {
+				var ret = fn.apply(this, arguments);
+				afterFn.apply(this, arguments);
+				return ret;
+			}
+		}
+
+		//调用实例
+
+		var fn = function(){
+			console.log('fn')
+		};
+
+		fn2 = after(fn, function(){
+			console.log('afterFn')
+		});
+
+		fn2()
+	</script>
+</body>
+</html>

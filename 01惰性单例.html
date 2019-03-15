@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="loginBtn">登录</button>
+    <script>
+        //
+        // var createLoginLayer = (function() {
+        //     var div;
+        //     return function() {
+        //         if(!div) {
+        //             div = document.createElement('div');
+        //             div.innerHTML = '我是悬浮窗';
+        //             div.style.display = 'none';
+        //             document.body.appendChild(div);
+        //         }
+
+        //         return div;
+        //     }
+        // })();
+
+        // document.getElementById('loginBtn').onclick = function() {
+        //     var loginLayer = createLoginLayer();
+        //     loginLayer.style.display = 'block';
+        // };
+
+        //把单例功能抽离；
+        var getSingle = function(fn) {
+            var result;
+            return function() {
+                return result || (result = fn.apply(this, arguments));
+            };
+        };
+
+        
+    </script>
+</body>
+</html>

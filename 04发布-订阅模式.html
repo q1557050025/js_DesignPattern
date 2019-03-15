@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var event  = {
+            clientList: {},
+            //订阅消息
+            listen: function(key, fn) {
+                if(!this.clientList[key]){
+                    this.clientList[key] = [];//如果没有key缓存列表则创建一个
+                }
+                this.clientList[key].push(fn);//添加订阅消息(fn)至key列表
+                // salesOffices.clientList.'squareMeter88'.push(function(price){
+                //      console.log('价格',price);
+                // })
+            },
+            //发布消息
+            trigger: function() {
+                var key = Array.prototype.shift.call(arguments);//arguments['squareMeter100',20000].shift()
+                var fns = this.clientList[key];//salesOffices.clientList['squareMeter100']
+
+                if(!fns || fns.length === 0) {
+                    return false;
+                }
+
+                for(var i = 0, fn; fn = fns[i++];) {
+                    fn.apply(this, arguments);//
+                }
+            },
+            //移除订阅
+            remove: function(key, fn) {
+                var fns = this.clientList[key];
+                //没有订阅,则返回false;
+                if(!fns) {
+                    return false;
+                }
+                //没有回调函数,则取消key对应的所有订阅;
+                if(!fn) {
+                    fns && (fns.length = 0);//????????????????????????????
+                }else{
+                    for(var len = fns.length - 1; len >= 0;len--) {
+                        var _fn = fns[len];
+                        console.log(_fn);
+                        console.log(fn);
+                        var g = _fn === fn;
+                        console.log(g);//输出了false?为啥啊????
+                        if(_fn === fn) {
+                            fns.splice(len,1);
+                        }
+                    }
+                }
+            }
+        };
+
+        var installEvent = function(obj) {
+            for(var i in event) {
+                obj[i] = event[i];
+            }
+        };
+
+        //调用
+        var salesOffices = {};
+        installEvent(salesOffices);
+
+        salesOffices.listen('squareMeter88', function(price) {
+            console.log('价格', price);
+        });
+
+        salesOffices.listen('squareMeter100', function(price){
+            console.log('价格', price);
+        });
+        salesOffices.remove('squareMeter88', function(price){
+            console.log('价格', price);
+        });
+        salesOffices.trigger('squareMeter88', 20000);// 输出:价格 20000
+        salesOffices.trigger('squareMeter100', 30000);// 输出:价格 30000
+
+    </script>
+</body>
+</html>

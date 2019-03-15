@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		//利用documentFragment作为共享池,减少dom的操作
+		var objPoolFactory = function(createObjFn){
+			var objPool = document.createDocumentFragment();
+			return{
+				create: function() {
+					var obj = objPool.childNodes.length === 0 ? createObjFn.apply(this, arguments):objPool.childNodes[0];
+					obj.innerHTML = 'div';
+					return obj;
+				},
+				recover: function(obj){
+					objPool.appendChild(obj);
+					console.log(objPool.childNodes)
+				}
+			}
+		};
+		
+		var divFactory = objPoolFactory(function(){
+			var div = document.createElement('div');
+			return div;
+		});
+		//调用实例
+		var div1 = divFactory.create();
+		document.body.appendChild(div1);
+		div1.innerHTML = "div1"
+		var div2 = divFactory.create();
+		document.body.appendChild(div2);
+		div2.innerHTML = "div2"
+		divFactory.recover(div2);
+		var div3 = divFactory.create();
+		document.body.appendChild(div3);
+		div3.innerHTML = "div3"
+		var div4 = divFactory.create();
+		document.body.appendChild(div4);
+		div4.innerHTML = "div4"
+	</script>
+</body>
+</html>

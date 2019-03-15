@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		var objPoolFactory = function(createObjFn){
+			var objPool = [];
+			return{
+				create: function() {
+					var obj = objPool.length === 0 ? createObjFn.apply(this, arguments):objPool.shift();
+					return obj;
+				},
+				recover: function(obj){
+					objPool.push(obj);
+				}
+			}
+		};
+		
+		var divFactory = objPoolFactory(function(){
+			var div = document.createElement('div');
+			document.body.appendChild(div);
+			return div;
+		});
+
+		var div1 = divFactory.create();
+		div1.innerHTML = 'div1'
+		var div2 = divFactory.create();
+		div2.innerHTML = 'div2'
+		divFactory.recover(div2);
+		var div3 = divFactory.create();
+		div3.innerHTML = 'div3'
+	</script>
+</body>
+</html>
